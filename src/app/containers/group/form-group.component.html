@@ -1,0 +1,23 @@
+
+<ng-container *ngIf="!config?.hidden">
+  <div *ngIf="config?.cssClasses?.length else defaultTmpl" [ngClass]="config?.cssClasses">
+    <ng-container *ngTemplateOutlet="defaultTmpl"></ng-container>
+  </div>
+</ng-container>
+
+<ng-template #defaultTmpl>
+  <ng-container>
+    <fieldset *ngIf="config?.title else contentTmpl">
+      <legend *ngIf="config?.title" class="bb-fieldset">{{config?.title}}</legend>
+      <ng-container *ngTemplateOutlet="content"></ng-container>
+    </fieldset>
+  </ng-container>
+</ng-template>
+
+<ng-template #contentTmpl>
+  <ng-container *ngTemplateOutlet="content"></ng-container>
+</ng-template>
+
+<ng-template #content>
+  <ng-content></ng-content>
+</ng-template>

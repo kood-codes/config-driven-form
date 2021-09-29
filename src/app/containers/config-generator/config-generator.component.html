@@ -1,0 +1,239 @@
+<div class="d-flex justify-content-center m-3">
+  <div class="w-md-75 mt-3 mb-5">
+    <form
+      class="config-generator mx-auto"
+      [formGroup]="generatorForm"
+      (ngSubmit)="generateConfig()"
+    >
+      <div class="config-generator-container">
+        <div class="config-generator-title">Config Generator</div>
+        <div class="sub-title">This form is used to generate the config that generates the form</div>
+      </div>
+
+      <div
+        [formGroup]="group"
+        (click)="setFocus(i)"
+        class="generator-item p-4 my-4"
+        *ngFor="let group of array.controls; let i = index"
+        ngForTrackBy="group.get('id').value"
+        [ngClass]="{ focussed: group.get('isFocussed')?.value }"
+      >
+        <div class="row">
+          <div class="col-md-8">
+            <mat-form-field
+              class="d-block"
+              appearance="fill"
+              *ngIf="group.get('isFocussed')?.value"
+            >
+              <input
+                matInput
+                autocomplete="off"
+                formControlName="label"
+                placeholder="Label"
+                autocomplete="off"
+                type="text"
+              />
+            </mat-form-field>
+            <div class="title-label mb-3" *ngIf="!group.get('isFocussed')?.value">
+              {{ group.get("label")?.value || "Label" }}
+              <span class="text-danger" *ngIf="group.get('required')?.value"
+                >*</span
+              >
+            </div>
+          </div>
+          <div
+            class="col-md-4 select-field-type"
+            *ngIf="group.get('isFocussed')?.value"
+          >
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="type">
+                <mat-select-trigger>
+                  <div class="d-flex align-items-center">
+                    <ng-container [ngSwitch]="group.get('type')?.value">
+                      <mat-icon *ngSwitchCase="'radio'" color="primary"
+                        >radio_button_checked</mat-icon
+                      >
+                      <mat-icon *ngSwitchCase="'checkbox'" color="primary"
+                        >check_box_outline_checked</mat-icon
+                      >
+                      <mat-icon *ngSwitchCase="'select'" color="primary"
+                        >arrow_drop_down_circle</mat-icon
+                      >
+                      <mat-icon *ngSwitchCase="'text'" color="primary"
+                        >short_text</mat-icon
+                      >
+                      <mat-icon *ngSwitchCase="'textarea'" color="primary"
+                        >subject</mat-icon
+                      >
+                    </ng-container>
+                    <div class="ms-2">
+                      {{ group.get("type").value | titlecase }}
+                    </div>
+                  </div>
+                </mat-select-trigger>
+                <mat-option value="radio">
+                  <mat-icon color="secondary">radio_button_checked</mat-icon>
+                  Radio
+                </mat-option>
+                <mat-option value="checkbox">
+                  <mat-icon color="secondary">check_box_outline_checked</mat-icon>
+                  Checkbox
+                </mat-option>
+                <mat-option value="select">
+                  <mat-icon color="secondary">arrow_drop_down_circle</mat-icon>
+                  Select
+                </mat-option>
+                <mat-divider></mat-divider>
+                <mat-option value="text">
+                  <mat-icon color="secondary">short_text</mat-icon>
+                  Textbox
+                </mat-option>
+                <mat-option value="textarea">
+                  <mat-icon color="secondary">subject</mat-icon>
+                  TextArea
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <ng-container *ngIf="group.controls['type'].value as type">
+            <ng-container
+              *ngIf="type === 'radio' || type === 'select' || type === 'checkbox'"
+            >
+              <div
+                class="row"
+                *ngFor="
+                  let control of group.controls['options'].controls;
+                  let j = index;
+                  trackBy: control
+                "
+              >
+                <div class="col-10">
+                  <div
+                    class="row align-items-center"
+                    [ngClass]="{ 'mb-3': !group.get('isFocussed')?.value }"
+                  >
+                    <div class="col-1">
+                      <mat-icon color="secondary" *ngIf="type === 'radio'"
+                        >radio_button_unchecked</mat-icon
+                      >
+                      <mat-icon color="secondary" *ngIf="type === 'checkbox'"
+                        >check_box_outline_blank</mat-icon
+                      >
+                      <span *ngIf="type === 'select'">{{ j + 1 }}.</span>
+                    </div>
+                    <div class="col-10 px-md-0">
+                      <mat-form-field
+                        class="d-block"
+                        *ngIf="group.get('isFocussed')?.value"
+                      >
+                        <input
+                          autocomplete="off"
+                          [formControl]="control"
+                          matInput
+                          placeholder="{{ 'Option ' + (j + 1) }}"
+                          autocomplete="off"
+                          type="text"
+                        />
+                      </mat-form-field>
+                      <div *ngIf="!group.get('isFocussed')?.value" class="ms-2">
+                        {{
+                          group.controls["options"].controls[j].value ||
+                            "Option " + (j + 1)
+                        }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-2" *ngIf="group.get('isFocussed')?.value">
+                  <button
+                    mat-icon-button
+                    *ngIf="j!==0"
+                    type="button"
+                    color="secondary"
+                    (click)="removeOption(group.controls['options'], j)"
+                  >
+                    <mat-icon color="secondary">clear</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="row col-10 align-items-center my-3"
+                *ngIf="group.get('isFocussed')?.value"
+              >
+                <div class="col-1">
+                  <mat-icon color="secondary" *ngIf="type === 'radio'"
+                    >radio_button_unchecked</mat-icon
+                  >
+                  <mat-icon color="secondary" *ngIf="type === 'checkbox'"
+                    >check_box_outline_blank</mat-icon
+                  >
+                  <span *ngIf="type === 'select'">#</span>
+                </div>
+                <div class="col-10 px-md-0 pointer">
+                  <div class="ms-1" (click)="addOption(group.controls['options'])">
+                    <span class="hover-underline">Add option</span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="type === 'text'">
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field class="d-block">
+                    <input matInput placeholder="Short-answer text" autocomplete="off" />
+                  </mat-form-field>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="type === 'textarea'">
+              <div class="row">
+                <div class="col-12">
+                  <mat-form-field class="d-block">
+                    <textarea matInput placeholder="Long-answer text"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+
+        <div
+          *ngIf="group.get('isFocussed')?.value"
+          class="
+            d-flex
+            justify-content-end
+            align-items-center
+            border-light border-top
+            pt-3
+            mt-2
+          "
+        >
+          <button mat-icon-button type="button" (click)="duplicateItem(i, group)">
+            <mat-icon color="secondary">content_copy</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
+            (click)="removeItem(i)"
+            *ngIf="array.controls.length > 1"
+          >
+            <mat-icon color="secondary">delete_outline</mat-icon>
+          </button>
+          <mat-slide-toggle labelPosition="before" color="primary" formControlName="required"
+            >Required</mat-slide-toggle
+          >
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between btn-container">
+        <button mat-raised-button type="submit" color="primary" class="mb-3">
+          <div class="d-inline-block ms-2">View Generated Config</div>
+        </button>
+        <button mat-raised-button type="button"  class="outline-btn mb-3" (click)="addItem()">
+          <mat-icon>add_circle_outline</mat-icon>
+          <div class="d-inline-block ms-2">Add Field</div>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

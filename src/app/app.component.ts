@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
+import { AfterContentInit, Component, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { DynamicComponents, FormConfig } from './models/form-items.model';
+import defaultConfig from './default-config';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'ng-config-driven-form';
+  jsonSymbol = `{ ; }`;
+  htmlSymbol = `< / >`;
 }

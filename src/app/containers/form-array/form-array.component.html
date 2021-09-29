@@ -1,0 +1,6 @@
+
+<ng-container *ngIf="!config?.hidden">
+  <div *ngIf="config?.cssClasses?.length else defaultTmpl" [ngClass]="config?.cssClasses">
+    <ng-content></ng-content>
+  </div>
+</ng-container>

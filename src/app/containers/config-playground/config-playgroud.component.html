@@ -1,0 +1,34 @@
+<div class="page-title d-flex justify-content-center pt-3">
+  <div class="config-generator-title">Config Driven Form</div>
+</div>
+
+
+<div class="row mx-3 py-3">
+  <div class="col-md-6">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="sub-title">Update the config and click save.</div>
+      <button mat-raised-button color="primary" (click)="updateConfig()">Save</button>
+    </div>
+  </div>
+</div>
+<div class="row mx-3 rounded d-flex h-100">
+  <div class="col-lg-6">
+    <ngx-codemirror
+      [(ngModel)]="content"
+      [options]="codeMirrorOptions"
+    ></ngx-codemirror>
+  </div>
+  <div class="col-lg-6 pb-4">
+    <ng-container #formOutlet></ng-container>
+  </div>
+</div>
+
+<ng-template #formTmpl>
+  <app-config-form
+      [formItem]="form"
+      [config]="config$ | async"
+      (submitForm)="onFormSubmit($event)"
+      (clear)="onFormReset()"
+    >
+  </app-config-form>
+</ng-template>

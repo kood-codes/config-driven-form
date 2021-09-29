@@ -1,0 +1,31 @@
+<form
+  class="dynamic-form"
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()">
+
+  <!-- Render form controls  -->
+  <ng-container *ngFor="let field of controls">
+    <ng-container
+      *ngTemplateOutlet="field.fields ? formGroupTmpl : formControlTmpl; context: {$implicit: field}">
+    </ng-container>
+  </ng-container>
+
+  <ng-template let-config #formGroupTmpl>
+    <app-dynamic-group [config]="config" [group]="getFormGroup(config)">
+      <ng-container *ngFor="let control of config.fields">
+        <ng-container
+          *ngTemplateOutlet="control.fields ? formGroupTmpl : formControlTmpl; context: {$implicit: control}">
+        </ng-container>
+      </ng-container>
+    </app-dynamic-group>
+  </ng-template>
+
+  <ng-template let-config #formControlTmpl>
+    <ng-container
+      appDynamicFormField
+      [config]="config"
+      [options]="config.options"
+      [group]="getFormGroup(config)"
+    ></ng-container>
+  </ng-template>
+</form>
